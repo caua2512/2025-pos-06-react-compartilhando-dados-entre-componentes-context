@@ -1,5 +1,5 @@
 const Titulo = () => (
-	<h1 className="text-2xl font-bold mb-1">React - Conceitos básicos</h1>
+	<h1 className="text-2xl font-bold mb-1">Gerenciamento de Tarefas</h1>
 );
 
 const SubTitulo = () => (
