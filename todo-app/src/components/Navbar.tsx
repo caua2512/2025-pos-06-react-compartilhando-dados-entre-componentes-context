@@ -1,4 +1,4 @@
-export default function Naver() {
+export default function Navbar() {
   return (
     <nav className="bg-blue-600 p-4 text-white">
       <div className="container mx-auto flex justify-between">

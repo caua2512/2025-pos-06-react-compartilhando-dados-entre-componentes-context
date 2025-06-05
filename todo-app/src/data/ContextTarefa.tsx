@@ -1,40 +1,39 @@
 'use client';
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
-import { Tarefa } from "@/types/tarefa";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Tarefa } from '@/types/tarefa';
 
-interface ContextTarefaProps {
-    tarefas: Tarefa[];
-    adicionarTarefa: (titulo: string) => void;
+interface TipoContexto {
+  tarefas: Tarefa[];
+  adicionarTarefa: (tarefa: Tarefa) => void;
 }
 
-const ContextTarefa = createContext<ContextTarefaProps | null>(null);
+const contextoTarefa = createContext<TipoContexto | null>(null);
 
+export const usaTarefa = () => {
+  const contexto = useContext(contextoTarefa);
+  if (!contexto) throw new Error('usaTarefa deve ser usado dentro do TarefaProvider');
+  return contexto;
+}
 
-export const useTarefas = () => {
-    const context = useContext(ContextTarefa);
-    if (!context) throw new Error("useTarefas deve ser usado dentro do TarefaProvider");
-    return context;
-};
-
-export const TarefaProvider = ({ children } : { children: ReactNode  }) => {
+export const TarefaProvider = ({children}: { children: React.ReactNode }) => {
     const [tarefas, setTarefas] = useState<Tarefa[]>([]);
-
     useEffect(() => {
-        fetch("https://dummyjson.com/todos")
-        .then((response) => response.json())
-        .then((data) => setTarefas(data.todos));
+        fetch('https://dummyjson.com/todos')
+            .then((res) => res.json())
+            .then((data) => setTarefas(data.todos))
+            .catch((err) => console.error('Erro ao carregar tarefas:', err));
     }, []);
 
     const adicionarTarefa = (tarefa: Tarefa) => {
-      setTarefas((prev) => [...prev, tarefa]); 
-    };
+        setTarefas((prev) => [...prev, tarefa]);
+    }
 
     return (
-        <ContextTarefa.Provider value={{ tarefas, adicionarTarefa }}>
+        <contextoTarefa.Provider value={{ tarefas, adicionarTarefa }}>
             {children}
-        </ContextTarefa.Provider>
+        </contextoTarefa.Provider>
     );
-};
+}
 
-export default TarefaProvider;
+
